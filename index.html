@@ -1059,15 +1059,7 @@
       <div class="frame">
         <img src="2.png" alt="Six-panel comic strip quiz on a mint green background, showing two students asking each other revision questions about BRICS with blank speech bubbles for answers.">
       </div>
-      <button type="button" class="fullscreen-link" data-fullscreen-trigger="2.png">View this quiz full screen, one question per page &rarr;</button>
     </section>
-
-    <div class="comic-fullscreen" data-fullscreen="2.png">
-      <button type="button" class="comic-fullscreen-close" aria-label="Close full screen view">&times;</button>
-      <div class="comic-fullscreen-stack"></div>
-      <div class="comic-fullscreen-caption"></div>
-      <div class="comic-fullscreen-dots"></div>
-    </div>
 
     <section class="rewards">
       <div class="rewards-copy">
@@ -1356,13 +1348,13 @@
   }
 
   // Pixel rects (source image px) for each of the comic's 6 panels, measured
-  // against the black gutters in 1.png/2.png, tagged text/image and grouped
-  // into the rows they sit in. Each page stacks its row's panel(s)
+  // against the black gutters in 1.png, tagged text/image and grouped into
+  // the 3 rows they sit in. Each page stacks its row's two panels
   // vertically, text on top, so the phone screen's height is used instead
-  // of squeezing panels into one wide, short strip. Edges that face the
-  // page margin (not a neighboring panel) are pushed out to the image edge,
-  // because hand-drawn speech bubbles occasionally bleed past their frame
-  // into that blank margin - cropping tight at the frame cuts them off.
+  // of squeezing both panels into one wide, short strip. Edges that face
+  // the page margin (not a neighboring panel) are pushed out to the image
+  // edge, because hand-drawn speech bubbles occasionally bleed past their
+  // frame into that blank margin - cropping tight at the frame cuts them off.
   var PAGE_DATA = {
     '1.png': { w: 2000, h: 1600, pages: [
       [
@@ -1377,16 +1369,6 @@
         { type: 'text', x: 0, y: 1112, w: 969, h: 488 },
         { type: 'text', x: 1022, y: 1112, w: 978, h: 488 }
       ]
-    ] },
-    // Each of the quiz's 6 panels is one self-contained question, so each
-    // gets its own single-panel page (no stacking needed).
-    '2.png': { w: 2000, h: 1600, pages: [
-      [ { type: 'text', x: 0, y: 0, w: 854.5, h: 921 } ],
-      [ { type: 'text', x: 854.5, y: 0, w: 554.5, h: 921 } ],
-      [ { type: 'text', x: 1409, y: 0, w: 591, h: 921 } ],
-      [ { type: 'text', x: 0, y: 959, w: 677, h: 641 } ],
-      [ { type: 'text', x: 677, y: 959, w: 422, h: 641 } ],
-      [ { type: 'text', x: 1099, y: 959, w: 901, h: 641 } ]
     ] }
   };
 
