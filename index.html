@@ -487,26 +487,63 @@
   .exhibit.quiz .exhibit-eyebrow { color: var(--quiz-forest); }
   .exhibit.comic .exhibit-eyebrow { color: var(--comic-purple); }
 
-  /* phone panel-by-panel viewer, swapped in for .frame below 560px */
-  .panel-viewer { display: none; }
-  .panel-viewer-box {
+  .fullscreen-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--comic-purple);
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .comic-fullscreen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(20, 16, 12, 0.92);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: env(safe-area-inset-top, 16px) 16px calc(env(safe-area-inset-bottom, 16px) + 8px);
+  }
+  .comic-fullscreen.open { display: flex; }
+  .comic-fullscreen-close {
+    position: absolute;
+    top: max(14px, env(safe-area-inset-top, 14px));
+    right: 16px;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .comic-fullscreen-box {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 900px;
     border: 4px solid var(--ink);
     box-shadow: 10px 10px 0 var(--shadow);
     background-repeat: no-repeat;
     touch-action: pan-y;
   }
-  .exhibit.comic .panel-viewer-box { border-color: var(--ink); }
-  .exhibit.quiz .panel-viewer-box { border-radius: 10px; border-color: var(--quiz-forest); }
-  .panel-viewer-caption {
+  .comic-fullscreen-caption {
     font-family: "IBM Plex Mono", monospace;
-    font-size: 0.72rem;
-    color: var(--ink-faint);
+    font-size: 0.78rem;
+    color: var(--paper);
     text-align: center;
-    padding: 8px 0 2px;
+    padding: 10px 0 4px;
   }
-  .panel-viewer-dots { display: flex; justify-content: center; gap: 6px; padding: 2px 0 4px; }
-  .panel-viewer-dots span { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--ink); }
-  .panel-viewer-dots span.on { background: var(--ink); }
+  .comic-fullscreen-dots { display: flex; justify-content: center; gap: 7px; padding: 2px 0; }
+  .comic-fullscreen-dots span { width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--paper); }
+  .comic-fullscreen-dots span.on { background: var(--paper); }
 
   .palette {
     display: flex;
@@ -911,8 +948,6 @@
   @media (max-width: 560px) {
     footer { flex-direction: column; }
     .exhibit-tag { text-align: left; }
-    .exhibit .frame { display: none; }
-    .exhibit .panel-viewer { display: block; }
   }
 </style>
 
@@ -992,12 +1027,15 @@
       <div class="frame">
         <img src="1.png" alt="Comic strip explaining the history and 2026 New Delhi summit of the BRICS alliance, laid out across six panels.">
       </div>
-      <div class="panel-viewer" data-image="1.png">
-        <div class="panel-viewer-box"></div>
-        <div class="panel-viewer-caption"></div>
-        <div class="panel-viewer-dots"></div>
-      </div>
+      <button type="button" class="fullscreen-link" data-fullscreen-trigger="1.png">View this comic full screen, page by page &rarr;</button>
     </section>
+
+    <div class="comic-fullscreen" data-fullscreen="1.png">
+      <button type="button" class="comic-fullscreen-close" aria-label="Close full screen view">&times;</button>
+      <div class="comic-fullscreen-box"></div>
+      <div class="comic-fullscreen-caption"></div>
+      <div class="comic-fullscreen-dots"></div>
+    </div>
 
     <section class="exhibit quiz">
       <div class="exhibit-head">
@@ -1010,11 +1048,6 @@
       <p class="exhibit-caption">The same material, turned into a comprehension check: two students trade six questions from the explainer, and every answer bubble is left blank for the reader to fill in.</p>
       <div class="frame">
         <img src="2.png" alt="Six-panel comic strip quiz on a mint green background, showing two students asking each other revision questions about BRICS with blank speech bubbles for answers.">
-      </div>
-      <div class="panel-viewer" data-image="2.png">
-        <div class="panel-viewer-box"></div>
-        <div class="panel-viewer-caption"></div>
-        <div class="panel-viewer-dots"></div>
       </div>
     </section>
 
@@ -1304,58 +1337,59 @@
     });
   }
 
-  // Pixel rects (source image px) for each panel, measured against the black
-  // gutters/borders in 1.png and 2.png. Panels aren't a uniform grid, so each
-  // box is hand-measured rather than computed from a cols x rows formula.
-  var PANEL_DATA = {
-    '1.png': { w: 2000, h: 1600, panels: [
-      { x: 64, y: 41, w: 1266, h: 556 },
-      { x: 1356, y: 41, w: 580, h: 556 },
-      { x: 79, y: 632, w: 485, h: 457 },
-      { x: 606, y: 632, w: 1330, h: 457 },
-      { x: 64, y: 1112, w: 905, h: 447 },
-      { x: 1022, y: 1112, w: 914, h: 447 }
-    ] },
-    '2.png': { w: 2000, h: 1600, panels: [
-      { x: 152, y: 403, w: 702.5, h: 518 },
-      { x: 854.5, y: 403, w: 554.5, h: 518 },
-      { x: 1409, y: 403, w: 457, h: 518 },
-      { x: 152, y: 959, w: 525, h: 519 },
-      { x: 677, y: 959, w: 422, h: 519 },
-      { x: 1099, y: 959, w: 767, h: 519 }
+  // Pixel rects (source image px) for the comic's 3 horizontal sections,
+  // measured against the black gutters in 1.png. Rows aren't equal height,
+  // so each box is hand-measured rather than computed from a formula.
+  var ROW_DATA = {
+    '1.png': { w: 2000, h: 1600, rows: [
+      { x: 64, y: 41, w: 1872, h: 556 },
+      { x: 79, y: 632, w: 1857, h: 457 },
+      { x: 64, y: 1112, w: 1872, h: 447 }
     ] }
   };
 
-  function initPanelViewer(el) {
-    var src = el.getAttribute('data-image');
-    var data = PANEL_DATA[src];
+  function initComicFullscreen(overlay) {
+    var src = overlay.getAttribute('data-fullscreen');
+    var data = ROW_DATA[src];
     if (!data) return;
 
-    var box = el.querySelector('.panel-viewer-box');
-    var caption = el.querySelector('.panel-viewer-caption');
-    var dotsWrap = el.querySelector('.panel-viewer-dots');
+    var box = overlay.querySelector('.comic-fullscreen-box');
+    var caption = overlay.querySelector('.comic-fullscreen-caption');
+    var dotsWrap = overlay.querySelector('.comic-fullscreen-dots');
     var idx = 0;
 
     box.style.backgroundImage = 'url(' + src + ')';
-    data.panels.forEach(function () { dotsWrap.appendChild(document.createElement('span')); });
+    data.rows.forEach(function () { dotsWrap.appendChild(document.createElement('span')); });
     var dots = dotsWrap.querySelectorAll('span');
 
     function render() {
-      var p = data.panels[idx];
-      var wPct = (p.w / data.w) * 100;
-      var hPct = (p.h / data.h) * 100;
-      var xPct = (p.x / data.w) * 100;
-      var yPct = (p.y / data.h) * 100;
+      var r = data.rows[idx];
+      var wPct = (r.w / data.w) * 100;
+      var hPct = (r.h / data.h) * 100;
+      var xPct = (r.x / data.w) * 100;
+      var yPct = (r.y / data.h) * 100;
       box.style.backgroundSize = (100 / wPct * 100) + '% ' + (100 / hPct * 100) + '%';
       box.style.backgroundPosition = (xPct / (100 - wPct) * 100) + '% ' + (yPct / (100 - hPct) * 100) + '%';
-      box.style.aspectRatio = p.w + ' / ' + p.h;
-      caption.textContent = 'Panel ' + (idx + 1) + ' / ' + data.panels.length;
+      box.style.aspectRatio = r.w + ' / ' + r.h;
+      caption.textContent = 'Page ' + (idx + 1) + ' / ' + data.rows.length;
       dots.forEach(function (d, i) { d.classList.toggle('on', i === idx); });
     }
 
     function go(delta) {
-      idx = (idx + delta + data.panels.length) % data.panels.length;
+      idx = (idx + delta + data.rows.length) % data.rows.length;
       render();
+    }
+
+    function open() {
+      idx = 0;
+      render();
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function close() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
     }
 
     var startX = null;
@@ -1367,8 +1401,19 @@
       if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
     }, { passive: true });
 
-    render();
+    overlay.querySelector('.comic-fullscreen-close').addEventListener('click', close);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (!overlay.classList.contains('open')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') go(-1);
+      if (e.key === 'ArrowRight') go(1);
+    });
+
+    document.querySelectorAll('[data-fullscreen-trigger="' + src + '"]').forEach(function (btn) {
+      btn.addEventListener('click', open);
+    });
   }
 
-  document.querySelectorAll('.panel-viewer').forEach(initPanelViewer);
+  document.querySelectorAll('.comic-fullscreen').forEach(initComicFullscreen);
 </script>
