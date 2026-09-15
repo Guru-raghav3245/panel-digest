@@ -525,14 +525,24 @@
     line-height: 1;
     cursor: pointer;
   }
+  .comic-fullscreen-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 640px;
+    min-height: 0;
+    flex: 1;
+    justify-content: center;
+    touch-action: pan-y;
+  }
   .comic-fullscreen-box {
     box-sizing: border-box;
     width: 100%;
-    max-width: 900px;
+    min-height: 0;
     border: 4px solid var(--ink);
-    box-shadow: 10px 10px 0 var(--shadow);
+    box-shadow: 8px 8px 0 var(--shadow);
     background-repeat: no-repeat;
-    touch-action: pan-y;
   }
   .comic-fullscreen-caption {
     font-family: "IBM Plex Mono", monospace;
@@ -1032,7 +1042,10 @@
 
     <div class="comic-fullscreen" data-fullscreen="1.png">
       <button type="button" class="comic-fullscreen-close" aria-label="Close full screen view">&times;</button>
-      <div class="comic-fullscreen-box"></div>
+      <div class="comic-fullscreen-stack">
+        <div class="comic-fullscreen-box"></div>
+        <div class="comic-fullscreen-box"></div>
+      </div>
       <div class="comic-fullscreen-caption"></div>
       <div class="comic-fullscreen-dots"></div>
     </div>
@@ -1337,46 +1350,61 @@
     });
   }
 
-  // Pixel rects (source image px) for the comic's 3 horizontal sections,
-  // measured against the black gutters in 1.png. Rows aren't equal height,
-  // so each box is hand-measured rather than computed from a formula.
-  var ROW_DATA = {
-    '1.png': { w: 2000, h: 1600, rows: [
-      { x: 64, y: 41, w: 1872, h: 556 },
-      { x: 79, y: 632, w: 1857, h: 457 },
-      { x: 64, y: 1112, w: 1872, h: 447 }
+  // Pixel rects (source image px) for each of the comic's 6 panels, measured
+  // against the black gutters in 1.png, tagged text/image and grouped into
+  // the 3 rows they sit in. Each page stacks its row's two panels vertically,
+  // text on top, so the phone screen's height is used instead of squeezing
+  // both panels into one wide, short strip.
+  var PAGE_DATA = {
+    '1.png': { w: 2000, h: 1600, pages: [
+      [
+        { type: 'text', x: 64, y: 41, w: 1266, h: 556 },
+        { type: 'image', x: 1356, y: 41, w: 580, h: 556 }
+      ],
+      [
+        { type: 'text', x: 606, y: 632, w: 1330, h: 457 },
+        { type: 'image', x: 79, y: 632, w: 485, h: 457 }
+      ],
+      [
+        { type: 'text', x: 64, y: 1112, w: 905, h: 447 },
+        { type: 'text', x: 1022, y: 1112, w: 914, h: 447 }
+      ]
     ] }
   };
 
   function initComicFullscreen(overlay) {
     var src = overlay.getAttribute('data-fullscreen');
-    var data = ROW_DATA[src];
+    var data = PAGE_DATA[src];
     if (!data) return;
 
-    var box = overlay.querySelector('.comic-fullscreen-box');
+    var stack = overlay.querySelector('.comic-fullscreen-stack');
+    var boxes = overlay.querySelectorAll('.comic-fullscreen-box');
     var caption = overlay.querySelector('.comic-fullscreen-caption');
     var dotsWrap = overlay.querySelector('.comic-fullscreen-dots');
     var idx = 0;
 
-    box.style.backgroundImage = 'url(' + src + ')';
-    data.rows.forEach(function () { dotsWrap.appendChild(document.createElement('span')); });
+    boxes.forEach(function (box) { box.style.backgroundImage = 'url(' + src + ')'; });
+    data.pages.forEach(function () { dotsWrap.appendChild(document.createElement('span')); });
     var dots = dotsWrap.querySelectorAll('span');
 
     function render() {
-      var r = data.rows[idx];
-      var wPct = (r.w / data.w) * 100;
-      var hPct = (r.h / data.h) * 100;
-      var xPct = (r.x / data.w) * 100;
-      var yPct = (r.y / data.h) * 100;
-      box.style.backgroundSize = (100 / wPct * 100) + '% ' + (100 / hPct * 100) + '%';
-      box.style.backgroundPosition = (xPct / (100 - wPct) * 100) + '% ' + (yPct / (100 - hPct) * 100) + '%';
-      box.style.aspectRatio = r.w + ' / ' + r.h;
-      caption.textContent = 'Page ' + (idx + 1) + ' / ' + data.rows.length;
+      var panels = data.pages[idx];
+      panels.forEach(function (p, i) {
+        var box = boxes[i];
+        var wPct = (p.w / data.w) * 100;
+        var hPct = (p.h / data.h) * 100;
+        var xPct = (p.x / data.w) * 100;
+        var yPct = (p.y / data.h) * 100;
+        box.style.backgroundSize = (100 / wPct * 100) + '% ' + (100 / hPct * 100) + '%';
+        box.style.backgroundPosition = (xPct / (100 - wPct) * 100) + '% ' + (yPct / (100 - hPct) * 100) + '%';
+        box.style.aspectRatio = p.w + ' / ' + p.h;
+      });
+      caption.textContent = 'Page ' + (idx + 1) + ' / ' + data.pages.length;
       dots.forEach(function (d, i) { d.classList.toggle('on', i === idx); });
     }
 
     function go(delta) {
-      idx = (idx + delta + data.rows.length) % data.rows.length;
+      idx = (idx + delta + data.pages.length) % data.pages.length;
       render();
     }
 
@@ -1393,8 +1421,8 @@
     }
 
     var startX = null;
-    box.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
-    box.addEventListener('touchend', function (e) {
+    stack.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+    stack.addEventListener('touchend', function (e) {
       if (startX === null) return;
       var dx = e.changedTouches[0].clientX - startX;
       startX = null;
