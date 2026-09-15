@@ -1,0 +1,1374 @@
+<title>Panel Digest</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --paper: #f6efdd;
+    --paper-soft: #ede2c8;
+    --ink: #171410;
+    --ink-soft: #5c5340;
+    --ink-faint: #8d8168;
+    --rule: #cabd9c;
+    --shadow: rgba(23, 20, 16, 0.25);
+    --brand: #3c4d8c;
+
+    /* sampled from 1.png — Issue 01, the explainer */
+    --comic-orange: #ef9349;
+    --comic-yellow: #ffc93d;
+    --comic-purple: #b06fda;
+    --comic-cyan: #33afe0;
+
+    /* sampled from 2.png — Issue 01, the revision quiz */
+    --quiz-mint: #d9eed2;
+    --quiz-forest: #204d35;
+    --quiz-sage: #a8c69e;
+    --quiz-sky: #a7c8da;
+    --quiz-coral: #f3a99b;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #18150f;
+      --paper-soft: #221d15;
+      --ink: #efe6cf;
+      --ink-soft: #b6a988;
+      --ink-faint: #786c53;
+      --rule: #3c3527;
+      --shadow: rgba(0, 0, 0, 0.6);
+      --brand: #8fa0e0;
+
+      --comic-orange: #f5a05a;
+      --comic-yellow: #ffd35f;
+      --comic-purple: #c489e5;
+      --comic-cyan: #56c1ea;
+
+      --quiz-mint: #a9c9a0;
+      --quiz-forest: #cfe6c9;
+      --quiz-sage: #7fa476;
+      --quiz-sky: #86aabd;
+      --quiz-coral: #e79484;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #18150f;
+    --paper-soft: #221d15;
+    --ink: #efe6cf;
+    --ink-soft: #b6a988;
+    --ink-faint: #786c53;
+    --rule: #3c3527;
+    --shadow: rgba(0, 0, 0, 0.6);
+    --brand: #8fa0e0;
+
+    --comic-orange: #f5a05a;
+    --comic-yellow: #ffd35f;
+    --comic-purple: #c489e5;
+    --comic-cyan: #56c1ea;
+
+    --quiz-mint: #a9c9a0;
+    --quiz-forest: #cfe6c9;
+    --quiz-sage: #7fa476;
+    --quiz-sky: #86aabd;
+    --quiz-coral: #e79484;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Source Serif 4", Georgia, serif;
+    margin: 0;
+    padding: 0 20px;
+    line-height: 1.55;
+  }
+
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  h1, h2, h3, .display {
+    font-family: "Big Shoulders Display", "Arial Narrow", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+  a { color: var(--brand); }
+
+  /* ---------- company masthead ---------- */
+
+  .masthead {
+    padding-block: 26px 22px;
+    border-bottom: 4px solid var(--ink);
+  }
+
+  .masthead-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 18px;
+  }
+
+  .brand-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .wordmark {
+    font-size: clamp(2.2rem, 7vw, 3.6rem);
+    font-weight: 900;
+    line-height: 0.9;
+  }
+
+  .wordmark .dot { color: var(--brand); }
+
+  .masthead-tagline {
+    max-width: 40ch;
+    color: var(--ink-soft);
+    font-size: 1rem;
+    font-style: italic;
+    text-align: right;
+  }
+
+  @media (max-width: 620px) {
+    .masthead-tagline { text-align: left; }
+  }
+
+  /* ---------- page tabs ---------- */
+
+  .pageviews {
+    display: flex;
+    gap: 22px;
+    padding-block: 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .tab-btn {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: none;
+    border: none;
+    padding: 4px 0;
+    color: var(--ink-faint);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+
+  .tab-btn:hover { color: var(--ink); }
+
+  .tab-btn[aria-selected="true"] {
+    color: var(--ink);
+    border-bottom-color: var(--brand);
+  }
+
+  .tab-btn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 3px;
+  }
+
+  /* ---------- mission strip ---------- */
+
+  .mission {
+    padding-block: 26px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-soft);
+    max-width: 72ch;
+  }
+
+  .mission strong { color: var(--ink); }
+
+  /* ---------- rewards ---------- */
+
+  .rewards {
+    padding-block: 30px;
+    border-bottom: 1px solid var(--rule);
+    display: grid;
+    grid-template-columns: minmax(240px, 1.1fr) minmax(240px, 1fr);
+    gap: 32px;
+  }
+
+  @media (max-width: 700px) {
+    .rewards { grid-template-columns: 1fr; }
+  }
+
+  .rewards-eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin-bottom: 8px;
+  }
+
+  .rewards h2 {
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .rewards-copy p {
+    color: var(--ink-soft);
+    max-width: 46ch;
+    margin: 0 0 14px;
+  }
+
+  .points-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .points-table .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-block: 9px;
+    border-bottom: 1px dashed var(--rule);
+    font-size: 0.9rem;
+  }
+
+  .points-table .row:first-child { padding-top: 0; }
+
+  .points-table .row span:first-child { color: var(--ink-soft); }
+
+  .points-table .row span:last-child {
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    color: var(--brand);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .redeem-block h3 {
+    font-family: "IBM Plex Mono", monospace;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .redeem-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .redeem-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 4px 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--rule);
+  }
+
+  .redeem-item .name {
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .redeem-item .cost {
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    color: var(--brand);
+    font-weight: 600;
+    font-size: 0.86rem;
+    white-space: nowrap;
+  }
+
+  .redeem-item .desc {
+    grid-column: 1 / -1;
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+  }
+
+  /* ---------- catalog ---------- */
+
+  .catalog {
+    padding-block: 34px 12px;
+  }
+
+  .catalog-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .catalog-head h2 { font-size: clamp(1.4rem, 4vw, 1.9rem); font-weight: 800; }
+
+  .catalog-count {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+  }
+
+  .issue-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding-bottom: 30px;
+  }
+
+  .issue-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px;
+    border: 2px solid var(--ink);
+    background: var(--paper-soft);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .issue-card:hover { border-color: var(--brand); }
+
+  .issue-card .fingerprint {
+    display: flex;
+    gap: 5px;
+  }
+
+  .issue-card .fingerprint span {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--ink);
+  }
+
+  .issue-card .kicker-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+
+  .issue-card h3 { font-size: 1.5rem; font-weight: 800; }
+
+  .issue-card p {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .issue-card .read-link {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.75rem;
+    color: var(--brand);
+    letter-spacing: 0.03em;
+  }
+
+  /* placeholder slot for the next issue */
+  .issue-card.next {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-style: dashed;
+    color: var(--ink-faint);
+    gap: 6px;
+  }
+
+  .issue-card.next .display {
+    font-size: 1.1rem;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- issue spread ---------- */
+
+  .issue-spread {
+    padding-top: 20px;
+    border-top: 4px solid var(--ink);
+  }
+
+  .issue-spread-head {
+    padding-block: 26px 6px;
+  }
+
+  .issue-spread-head .catalog-count { display: block; margin-bottom: 6px; }
+
+  .issue-spread-head h2 {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 900;
+  }
+
+  .exhibit {
+    padding-block: 34px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .exhibit-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .exhibit-eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .exhibit h3 {
+    font-size: clamp(1.5rem, 4.5vw, 2.2rem);
+    font-weight: 800;
+  }
+
+  .exhibit-tag {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .exhibit-caption {
+    max-width: 68ch;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+  }
+
+  .frame {
+    border: 4px solid var(--ink);
+    box-shadow: 10px 10px 0 var(--shadow);
+    padding: 10px;
+    background: var(--paper-soft);
+  }
+
+  .frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--ink);
+  }
+
+  .exhibit.comic .frame {
+    border-color: var(--ink);
+    background: linear-gradient(135deg, var(--comic-orange), var(--comic-yellow), var(--comic-purple), var(--comic-cyan));
+    background-size: 300% 300%;
+    background-position: 0% 50%;
+  }
+  .exhibit.comic .frame > img { border: 6px solid var(--ink); }
+
+  .exhibit.quiz .frame {
+    border-radius: 18px;
+    background: var(--quiz-mint);
+    border-color: var(--quiz-forest);
+  }
+  .exhibit.quiz .frame > img { border-radius: 10px; border-color: var(--quiz-forest); }
+  .exhibit.quiz .exhibit-eyebrow { color: var(--quiz-forest); }
+  .exhibit.comic .exhibit-eyebrow { color: var(--comic-purple); }
+
+  /* phone panel-by-panel viewer, swapped in for .frame below 560px */
+  .panel-viewer { display: none; }
+  .panel-viewer-box {
+    border: 4px solid var(--ink);
+    box-shadow: 10px 10px 0 var(--shadow);
+    background-repeat: no-repeat;
+    touch-action: pan-y;
+  }
+  .exhibit.comic .panel-viewer-box { border-color: var(--ink); }
+  .exhibit.quiz .panel-viewer-box { border-radius: 10px; border-color: var(--quiz-forest); }
+  .panel-viewer-caption {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 8px 0 2px;
+  }
+  .panel-viewer-dots { display: flex; justify-content: center; gap: 6px; padding: 2px 0 4px; }
+  .panel-viewer-dots span { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--ink); }
+  .panel-viewer-dots span.on { background: var(--ink); }
+
+  .palette {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    color: var(--ink-soft);
+  }
+
+  .swatch .chip {
+    width: 46px;
+    height: 46px;
+    border: 2px solid var(--ink);
+  }
+
+  .exhibit.quiz .swatch .chip { border-radius: 50%; border-color: var(--quiz-forest); }
+
+  /* ---------- analytics page ---------- */
+
+  .analytics-page { padding-block: 32px 12px; }
+
+  .analytics-head { max-width: 68ch; padding-bottom: 8px; }
+
+  .analytics-head .rewards-eyebrow { margin-bottom: 8px; }
+
+  .analytics-head h2 {
+    font-size: clamp(1.7rem, 5vw, 2.4rem);
+    font-weight: 900;
+    margin-bottom: 12px;
+  }
+
+  .analytics-head p { color: var(--ink-soft); margin: 0 0 8px; }
+
+  .analytics-head p.note {
+    font-size: 0.86rem;
+    font-style: italic;
+    color: var(--ink-faint);
+  }
+
+  .chart-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding-block: 26px 40px;
+  }
+
+  .chart-card {
+    border: 2px solid var(--ink);
+    background: var(--paper-soft);
+    padding: 22px;
+  }
+
+  .chart-card-head { margin-bottom: 4px; }
+
+  .chart-card-head .exhibit-eyebrow { color: var(--brand); }
+
+  .chart-card-head h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .chart-takeaway {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    max-width: 62ch;
+    margin: 0 0 16px;
+  }
+
+  .chart-card svg { display: block; width: 100%; height: auto; }
+  .chart-card svg text { fill: var(--ink); font-family: "IBM Plex Mono", monospace; }
+  .chart-card svg .grid-line { stroke: var(--rule); stroke-width: 1; }
+  .chart-card svg .axis-line { stroke: var(--ink); stroke-width: 1.5; }
+  .chart-card svg .bar-before { fill: var(--ink-faint); }
+  .chart-card svg .bar-after { fill: var(--brand); }
+  .chart-card svg .bar-main { fill: var(--brand); }
+  .chart-card svg .whisker { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+  .chart-card svg .axis-label { fill: var(--ink-faint); font-size: 9px; }
+  .chart-card svg .value-label { font-size: 10px; font-weight: 600; }
+  .chart-card svg .cat-label { font-size: 10.5px; }
+
+  .chart-legend {
+    display: flex;
+    gap: 18px;
+    margin-top: 10px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+  }
+
+  .chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  .chart-legend i {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+  }
+
+  .chart-source {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--rule);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+
+  .chart-source a { color: var(--ink-faint); text-decoration: underline; }
+  .chart-source a:hover { color: var(--brand); }
+
+  /* ---------- pricing page ---------- */
+
+  .pricing-page { padding-block: 32px 40px; }
+
+  .pricing-head { max-width: 68ch; margin-bottom: 26px; }
+
+  .pricing-head h2 {
+    font-size: clamp(1.7rem, 5vw, 2.4rem);
+    font-weight: 900;
+    margin-bottom: 12px;
+  }
+
+  .pricing-head p { color: var(--ink-soft); margin: 0; }
+
+  .price-card {
+    border: 3px solid var(--ink);
+    background: var(--paper-soft);
+    box-shadow: 10px 10px 0 var(--shadow);
+    padding: 30px;
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) 1fr;
+    gap: 30px;
+  }
+
+  @media (max-width: 700px) {
+    .price-card { grid-template-columns: 1fr; }
+  }
+
+  .price-tag-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-right: 1px dashed var(--rule);
+    padding-right: 30px;
+  }
+
+  @media (max-width: 700px) {
+    .price-tag-block { border-right: none; border-bottom: 1px dashed var(--rule); padding-right: 0; padding-bottom: 20px; }
+  }
+
+  .price-tag {
+    font-family: "Big Shoulders Display", sans-serif;
+    font-weight: 900;
+    font-size: 3rem;
+    line-height: 0.95;
+    color: var(--brand);
+  }
+
+  .price-tag sup { font-size: 1.3rem; top: -1.2em; }
+  .price-tag small {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .price-eligibility {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .price-eligibility strong { color: var(--ink); }
+
+  .price-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .price-features .feature {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 4px 14px;
+    padding-block: 14px;
+    border-bottom: 1px dashed var(--rule);
+  }
+
+  .price-features .feature:last-child { border-bottom: none; padding-bottom: 0; }
+  .price-features .feature:first-child { padding-top: 0; }
+
+  .price-features .mark {
+    color: var(--brand);
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 700;
+  }
+
+  .price-features .feature-name {
+    font-weight: 600;
+    grid-column: 2;
+  }
+
+  .price-features .feature-desc {
+    grid-column: 2;
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+  }
+
+  .consumer-card {
+    margin-top: 22px;
+    border: 2px dashed var(--rule);
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .consumer-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .consumer-card-copy { max-width: 52ch; }
+
+  .consumer-card .rewards-eyebrow { color: var(--ink-faint); margin-bottom: 6px; }
+
+  .consumer-card h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .consumer-card p {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    margin: 0;
+  }
+
+  .play-badge {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule);
+    padding: 8px 14px;
+    white-space: nowrap;
+  }
+
+  /* ---------- app screenshot mockups ---------- */
+
+  .app-phones {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .phone {
+    width: 132px;
+    border: 3px solid var(--ink);
+    border-radius: 18px;
+    background: var(--ink);
+    padding: 5px;
+    box-shadow: 6px 6px 0 var(--shadow);
+    flex: 0 0 auto;
+  }
+
+  .phone-caption {
+    margin-top: 8px;
+    text-align: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .phone-screen {
+    aspect-ratio: 9 / 19.5;
+    background: var(--paper);
+    border-radius: 13px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: "Source Serif 4", serif;
+  }
+
+  .phone-bar {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "Big Shoulders Display", sans-serif;
+    font-weight: 800;
+    font-size: 9px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 8px 8px 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .phone-bar .dot { color: var(--brand); }
+
+  /* screen 1: library */
+  .phone-list { flex: 1; padding: 7px 7px 0; display: flex; flex-direction: column; gap: 6px; }
+  .phone-row { display: flex; align-items: center; gap: 6px; }
+  .phone-row .sw { width: 12px; height: 12px; flex: none; border: 1px solid var(--ink); }
+  .phone-row .ln { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .phone-row .ln .t1 { height: 4px; background: var(--ink); opacity: 0.8; border-radius: 1px; }
+  .phone-row .ln .t2 { height: 3px; background: var(--ink-faint); opacity: 0.6; border-radius: 1px; width: 70%; }
+  .phone-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 7px 4px;
+    border-top: 1px solid var(--rule);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 6px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .phone-nav .active { color: var(--brand); font-weight: 700; }
+
+  /* screen 2: reader */
+  .phone-reader-panel {
+    flex: 1;
+    margin: 7px;
+    border: 2px solid var(--ink);
+    background: linear-gradient(150deg, var(--comic-orange), var(--comic-yellow), var(--comic-purple), var(--comic-cyan));
+    position: relative;
+  }
+  .phone-reader-caption {
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 6px;
+    padding: 3px 4px;
+    color: var(--ink);
+  }
+  .phone-dots { display: flex; justify-content: center; gap: 4px; padding: 6px 0 9px; }
+  .phone-dots span { width: 5px; height: 5px; border-radius: 50%; border: 1px solid var(--brand); }
+  .phone-dots span.on { background: var(--brand); }
+
+  /* screen 3: rewards */
+  .phone-rewards { flex: 1; padding: 10px 9px 0; display: flex; flex-direction: column; align-items: center; }
+  .phone-rewards .pts {
+    font-family: "Big Shoulders Display", sans-serif;
+    font-weight: 900;
+    font-size: 26px;
+    color: var(--brand);
+    line-height: 1;
+  }
+  .phone-rewards .pts-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 6px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+  }
+  .phone-rewards .bar { width: 100%; height: 5px; background: var(--rule); border-radius: 3px; overflow: hidden; margin-bottom: 3px; }
+  .phone-rewards .bar i { display: block; height: 100%; width: 62%; background: var(--brand); }
+  .phone-rewards .bar-label { font-family: "IBM Plex Mono", monospace; font-size: 5.5px; color: var(--ink-faint); margin-bottom: 10px; }
+  .phone-rewards .redeem-row { width: 100%; display: flex; justify-content: space-between; font-size: 6.5px; padding: 4px 0; border-top: 1px dashed var(--rule); }
+  .phone-rewards .redeem-row span:last-child { font-family: "IBM Plex Mono", monospace; color: var(--brand); }
+
+  /* ---------- footer ---------- */
+
+  footer {
+    padding-block: 26px 40px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 560px) {
+    footer { flex-direction: column; }
+    .exhibit-tag { text-align: left; }
+    .exhibit .frame { display: none; }
+    .exhibit .panel-viewer { display: block; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="masthead-top">
+      <span>Est. 2026</span>
+      <span>1 issue in print &middot; next issue in production</span>
+    </div>
+    <div class="brand-row">
+      <h1 class="wordmark">PANEL<br>DIGEST<span class="dot">.</span></h1>
+      <p class="masthead-tagline">Current affairs, drawn and quizzed.</p>
+    </div>
+  </header>
+
+  <nav class="pageviews" role="tablist" aria-label="Page views">
+    <button class="tab-btn" role="tab" data-view="catalog" aria-selected="true" id="tab-catalog" aria-controls="view-catalog" onclick="showView('catalog')">Catalog</button>
+    <button class="tab-btn" role="tab" data-view="analytics" aria-selected="false" id="tab-analytics" aria-controls="view-analytics" onclick="showView('analytics')">Analytics</button>
+    <button class="tab-btn" role="tab" data-view="pricing" aria-selected="false" id="tab-pricing" aria-controls="view-pricing" onclick="showView('pricing')">Pricing</button>
+  </nav>
+
+  <div id="view-catalog" role="tabpanel" aria-labelledby="tab-catalog">
+
+  <section class="mission">
+    <p>Every issue takes one news story and runs it twice: once as a six-panel explainer, once as a companion revision quiz. We don't reskin a house palette onto the art &mdash; <strong>each issue keeps the look it was drawn in</strong>, so the catalog looks like a shelf of different books, not one template filled in six times.</p>
+  </section>
+
+  <section class="catalog">
+    <div class="catalog-head">
+      <h2>The Catalog</h2>
+      <span class="catalog-count">Issue index</span>
+    </div>
+    <div class="issue-grid">
+
+      <a class="issue-card" href="#issue-01">
+        <div class="kicker-row">
+          <span>Issue 01</span>
+          <span>Geopolitics</span>
+        </div>
+        <h3>The BRICS Briefing</h3>
+        <p>How BRIC became an eleven-member bloc, and what got decided at its 18th summit in New Delhi.</p>
+        <div class="fingerprint">
+          <span style="background:var(--comic-orange)"></span>
+          <span style="background:var(--comic-yellow)"></span>
+          <span style="background:var(--comic-purple)"></span>
+          <span style="background:var(--comic-cyan)"></span>
+          <span style="background:var(--quiz-mint)"></span>
+          <span style="background:var(--quiz-coral)"></span>
+        </div>
+        <span class="read-link">Read the issue &darr;</span>
+      </a>
+
+      <div class="issue-card next">
+        <span class="display">Issue 02</span>
+        <span class="mono" style="font-size:0.72rem;">In production &mdash; topic TBA</span>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="issue-spread" id="issue-01">
+    <div class="issue-spread-head">
+      <span class="catalog-count mono">Issue 01 &middot; full spread</span>
+      <h2>The BRICS Briefing</h2>
+    </div>
+
+    <section class="exhibit comic">
+      <div class="exhibit-head">
+        <div>
+          <div class="exhibit-eyebrow">Primary source &middot; the explainer</div>
+          <h3>BRICS 2026, In Six Panels</h3>
+        </div>
+        <div class="exhibit-tag">1.png &middot; 2000&times;1500</div>
+      </div>
+      <p class="exhibit-caption">Bold, poster-flat blocks and a marker-drawn hand-lettered voice carry the explainer: how BRIC became BRICS, then BRICS+, and why New Delhi is hosting eleven leaders on September 12&ndash;13, 2026.</p>
+      <div class="frame">
+        <img src="1.png" alt="Comic strip explaining the history and 2026 New Delhi summit of the BRICS alliance, laid out across six panels.">
+      </div>
+      <div class="panel-viewer" data-image="1.png">
+        <div class="panel-viewer-box"></div>
+        <div class="panel-viewer-caption"></div>
+        <div class="panel-viewer-dots"></div>
+      </div>
+    </section>
+
+    <section class="exhibit quiz">
+      <div class="exhibit-head">
+        <div>
+          <div class="exhibit-eyebrow">Companion &middot; revision questions</div>
+          <h3>Complete The Conversation</h3>
+        </div>
+        <div class="exhibit-tag">2.png &middot; hallway strip, 6 panels</div>
+      </div>
+      <p class="exhibit-caption">The same material, turned into a comprehension check: two students trade six questions from the explainer, and every answer bubble is left blank for the reader to fill in.</p>
+      <div class="frame">
+        <img src="2.png" alt="Six-panel comic strip quiz on a mint green background, showing two students asking each other revision questions about BRICS with blank speech bubbles for answers.">
+      </div>
+      <div class="panel-viewer" data-image="2.png">
+        <div class="panel-viewer-box"></div>
+        <div class="panel-viewer-caption"></div>
+        <div class="panel-viewer-dots"></div>
+      </div>
+    </section>
+
+    <section class="rewards">
+      <div class="rewards-copy">
+        <div class="rewards-eyebrow">Reader rewards</div>
+        <h2>Points For Getting It Right</h2>
+        <p>Every blank speech bubble above is worth something. Fill it in correctly and the points land on your reader profile &mdash; no points for guessing.</p>
+        <div class="points-table">
+          <div class="row"><span>Correct answer</span><span>+10 pts</span></div>
+          <div class="row"><span>Issue quiz cleared, first attempt</span><span>+25 pts</span></div>
+          <div class="row"><span>Retake after review</span><span>+2 pts</span></div>
+        </div>
+      </div>
+      <div class="redeem-block">
+        <h3>Redeem your points</h3>
+        <div class="redeem-list">
+          <div class="redeem-item">
+            <span class="name">Digital back-issue unlock</span>
+            <span class="cost">40 pts</span>
+            <span class="desc">Any past issue, ad-free, no palette watermark.</span>
+          </div>
+          <div class="redeem-item">
+            <span class="name">Letters-column shoutout</span>
+            <span class="cost">120 pts</span>
+            <span class="desc">Your name and question printed in the next issue.</span>
+          </div>
+          <div class="redeem-item">
+            <span class="name">Variant cover postcard</span>
+            <span class="cost">180 pts</span>
+            <span class="desc">A print of the issue art, mailed to you.</span>
+          </div>
+          <div class="redeem-item">
+            <span class="name">Studio poster, 18&times;24</span>
+            <span class="cost">350 pts</span>
+            <span class="desc">Full palette breakdown, printed at issue-cover weight.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  </div>
+
+  <div id="view-analytics" role="tabpanel" aria-labelledby="tab-analytics" hidden>
+  <section class="analytics-page">
+    <div class="analytics-head">
+      <div class="rewards-eyebrow">Analytics</div>
+      <h2>Why We Bet On This Format</h2>
+      <p>We looked for a published study on comic strips and Olympiad-style GK exams specifically and didn't find one yet &mdash; that gap is part of why we're building the catalog. Instead, here is the closest peer-reviewed evidence: vocabulary density, learning-motivation gains, and pre/post knowledge-test scores from comic-based instruction, the same mechanics our explainer-plus-quiz format leans on.</p>
+      <p class="note">Three studies, three subjects, one pattern: comics move the number that matters.</p>
+    </div>
+
+    <div class="chart-grid">
+
+      <div class="chart-card">
+        <div class="chart-card-head">
+          <div class="exhibit-eyebrow">Vocabulary</div>
+          <h3>Comics Carry More Rare Words Than Children's Books</h3>
+        </div>
+        <p class="chart-takeaway">Rare words per 1,000 running words &mdash; comics sit closer to adult books than to the children's-book shelf they're often filed next to, which is the raw material a vocabulary-building quiz needs.</p>
+        <svg viewBox="0 0 560 232" role="img" aria-label="Bar chart: rare words per 1,000 words. Comic books 53.5, adult books 52.7, children's books 30.9, expert witness testimony 28.4, adult conversation 17.3.">
+          <line class="grid-line" x1="150" y1="8" x2="150" y2="200" stroke-dasharray="3,3" />
+          <line class="grid-line" x1="273" y1="8" x2="273" y2="200" stroke-dasharray="3,3" />
+          <line class="grid-line" x1="397" y1="8" x2="397" y2="200" stroke-dasharray="3,3" />
+          <line class="grid-line" x1="520" y1="8" x2="520" y2="200" stroke-dasharray="3,3" />
+          <line class="axis-line" x1="150" y1="8" x2="150" y2="200" />
+          <text class="axis-label" x="150" y="214" text-anchor="middle">0</text>
+          <text class="axis-label" x="273" y="214" text-anchor="middle">20</text>
+          <text class="axis-label" x="397" y="214" text-anchor="middle">40</text>
+          <text class="axis-label" x="520" y="214" text-anchor="middle">60</text>
+          <text class="axis-label" x="520" y="228" text-anchor="end">rare words / 1,000</text>
+
+          <text class="cat-label" x="145" y="24" text-anchor="end">Comic books</text>
+          <rect class="bar-main" x="150" y="8" width="330" height="24" />
+          <text class="value-label" x="486" y="24">53.5</text>
+
+          <text class="cat-label" x="145" y="62" text-anchor="end">Adult books</text>
+          <rect class="bar-main" x="150" y="46" width="325" height="24" />
+          <text class="value-label" x="481" y="62">52.7</text>
+
+          <text class="cat-label" x="145" y="100" text-anchor="end">Children's books</text>
+          <rect class="bar-main" x="150" y="84" width="191" height="24" opacity="0.55" />
+          <text class="value-label" x="347" y="100">30.9</text>
+
+          <text class="cat-label" x="145" y="138" text-anchor="end">Expert witness testimony</text>
+          <rect class="bar-main" x="150" y="122" width="175" height="24" opacity="0.55" />
+          <text class="value-label" x="331" y="138">28.4</text>
+
+          <text class="cat-label" x="145" y="176" text-anchor="end">Adult conversation</text>
+          <rect class="bar-main" x="150" y="160" width="107" height="24" opacity="0.55" />
+          <text class="value-label" x="263" y="176">17.3</text>
+        </svg>
+        <div class="chart-source">Hayes, D. P. &amp; Ahrens, M. (1988). Vocabulary simplification for children: a special case of &ldquo;motherese.&rdquo; <em>Journal of Child Language</em>, 15(2). &middot; <a href="https://www.cambridge.org/core/journals/journal-of-child-language/article/abs/vocabulary-simplification-for-children-a-special-case-of-motherese/6821EFB9BA68750A095DA0BE040A8A30" target="_blank" rel="noopener">Cambridge Core</a></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-head">
+          <div class="exhibit-eyebrow">Attention &amp; motivation</div>
+          <h3>Engagement Climbs When The Lesson Is A Comic</h3>
+        </div>
+        <p class="chart-takeaway">A classroom trial swapped a text handout for a social-studies digital comic. Self-reported learning motivation rose, and the share of students who actually met the lesson's learning targets went from a small minority to nearly all of them.</p>
+        <svg viewBox="0 0 400 262" role="img" aria-label="Grouped bar chart. Learning motivation: 71.83% before, 81.92% after. Students meeting learning outcomes: 11.10% before, 96.30% after.">
+          <line class="grid-line" x1="50" y1="220" x2="330" y2="220" />
+          <line class="grid-line" x1="50" y1="175" x2="330" y2="175" stroke-dasharray="3,3" />
+          <line class="grid-line" x1="50" y1="130" x2="330" y2="130" stroke-dasharray="3,3" />
+          <line class="grid-line" x1="50" y1="85" x2="330" y2="85" stroke-dasharray="3,3" />
+          <line class="axis-line" x1="50" y1="40" x2="50" y2="220" />
+          <text class="axis-label" x="44" y="223" text-anchor="end">0</text>
+          <text class="axis-label" x="44" y="178" text-anchor="end">25</text>
+          <text class="axis-label" x="44" y="133" text-anchor="end">50</text>
+          <text class="axis-label" x="44" y="88" text-anchor="end">75</text>
+          <text class="axis-label" x="44" y="44" text-anchor="end">100%</text>
+
+          <rect class="bar-before" x="60" y="90.7" width="34" height="129.3" />
+          <text class="value-label" x="77" y="84" text-anchor="middle">71.8%</text>
+          <rect class="bar-after" x="100" y="72.5" width="34" height="147.5" />
+          <text class="value-label" x="117" y="66" text-anchor="middle">81.9%</text>
+          <text class="cat-label" x="97" y="240" text-anchor="middle">Learning motivation</text>
+
+          <rect class="bar-before" x="240" y="200" width="34" height="20" />
+          <text class="value-label" x="257" y="194" text-anchor="middle">11.1%</text>
+          <rect class="bar-after" x="280" y="46.7" width="34" height="173.3" />
+          <text class="value-label" x="297" y="40.7" text-anchor="middle">96.3%</text>
+          <text class="cat-label" x="277" y="240" text-anchor="middle">Met learning outcomes</text>
+        </svg>
+        <div class="chart-legend">
+          <span><i style="background:var(--ink-faint)"></i>Before comic</span>
+          <span><i style="background:var(--brand)"></i>After comic</span>
+        </div>
+        <div class="chart-source">Effect of a social-values-based digital comic on motivation and learning outcomes, Class X, MA Al Islam Telaga Biru. <em>World Journal of Advanced Research and Reviews</em>. &middot; <a href="https://wjarr.com/content/effect-digital-comic-based-social-values-motivation-and-learning-outcomes-class-x-ma-al" target="_blank" rel="noopener">WJARR</a></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-head">
+          <div class="exhibit-eyebrow">Knowledge-check scores</div>
+          <h3>Scores Nearly Double After A Comic-Based Module</h3>
+        </div>
+        <p class="chart-takeaway">A 50-item multiple-choice test &mdash; the same format as most GK and Olympiad rounds &mdash; given before and after a four-week comic-based module. This is physics, not current affairs, but the test design is the closest published match to a quiz-style knowledge check.</p>
+        <svg viewBox="0 0 300 260" role="img" aria-label="Bar chart with error bars. Pre-test mean 16.3 out of 50, post-test mean 29.2 out of 50, from a 68-student trial.">
+          <line class="grid-line" x1="40" y1="220" x2="290" y2="220" />
+          <line class="grid-line" x1="40" y1="184" x2="290" y2="184" stroke-dasharray="3,3" />
+          <line class="grid-line" x1="40" y1="148" x2="290" y2="148" stroke-dasharray="3,3" />
+          <line class="grid-line" x1="40" y1="112" x2="290" y2="112" stroke-dasharray="3,3" />
+          <line class="grid-line" x1="40" y1="76" x2="290" y2="76" stroke-dasharray="3,3" />
+          <line class="axis-line" x1="40" y1="40" x2="40" y2="220" />
+          <text class="axis-label" x="34" y="223" text-anchor="end">0</text>
+          <text class="axis-label" x="34" y="187" text-anchor="end">10</text>
+          <text class="axis-label" x="34" y="151" text-anchor="end">20</text>
+          <text class="axis-label" x="34" y="115" text-anchor="end">30</text>
+          <text class="axis-label" x="34" y="79" text-anchor="end">40</text>
+          <text class="axis-label" x="34" y="44" text-anchor="end">50 / 50</text>
+
+          <rect class="bar-before" x="80" y="161.3" width="50" height="58.7" />
+          <line class="whisker" x1="105" y1="140.9" x2="105" y2="181.7" />
+          <line class="whisker" x1="97" y1="140.9" x2="113" y2="140.9" />
+          <line class="whisker" x1="97" y1="181.7" x2="113" y2="181.7" />
+          <text class="value-label" x="105" y="130" text-anchor="middle">16.3</text>
+          <text class="cat-label" x="105" y="238" text-anchor="middle">Pre-test</text>
+
+          <rect class="bar-after" x="170" y="114.8" width="50" height="105.2" />
+          <line class="whisker" x1="195" y1="103.7" x2="195" y2="125.9" />
+          <line class="whisker" x1="187" y1="103.7" x2="203" y2="103.7" />
+          <line class="whisker" x1="187" y1="125.9" x2="203" y2="125.9" />
+          <text class="value-label" x="195" y="93" text-anchor="middle">29.2</text>
+          <text class="cat-label" x="195" y="238" text-anchor="middle">Post-test</text>
+
+          <text class="axis-label" x="290" y="252" text-anchor="end">n = 68, whiskers show &plusmn;1 SD</text>
+        </svg>
+        <div class="chart-source">Badeo, J. M. O. &amp; Ong Kian Koc, B. C. U. (2021). Use of comic-based learning module in physics in enhancing students' achievement and motivation. <em>Science Education International</em>, 32(2), 131&ndash;136. &middot; <a href="https://eric.ed.gov/?id=EJ1306177" target="_blank" rel="noopener">ERIC</a></div>
+      </div>
+
+    </div>
+  </section>
+  </div>
+
+  <div id="view-pricing" role="tabpanel" aria-labelledby="tab-pricing" hidden>
+  <section class="pricing-page">
+    <div class="pricing-head">
+      <div class="rewards-eyebrow">Pricing</div>
+      <h2>One Plan, Built For Schools</h2>
+      <p>Panel Digest is sold to schools as a single site license &mdash; not to individual students or parents, and not per seat. One subscription covers every student the school enrolls.</p>
+    </div>
+
+    <div class="price-card">
+      <div class="price-tag-block">
+        <div class="price-tag">&#8377;5,000<small>per school / month</small></div>
+        <div class="price-eligibility"><strong>Schools only.</strong> Panel Digest accounts are issued to the school and distributed to students by their teachers &mdash; we don't sell direct-to-student or direct-to-parent plans.</div>
+      </div>
+      <div class="price-features">
+        <div class="feature">
+          <span class="mark">&#9642;</span>
+          <span class="feature-name">The full comic catalog</span>
+          <span class="feature-desc">Every issue and its revision quiz, unlocked for every enrolled student as new issues ship.</span>
+        </div>
+        <div class="feature">
+          <span class="mark">&#9642;</span>
+          <span class="feature-name">The student app</span>
+          <span class="feature-desc">One login that works on the school's devices and at home &mdash; reading and quizzes aren't locked to the classroom.</span>
+        </div>
+        <div class="feature">
+          <span class="mark">&#9642;</span>
+          <span class="feature-name">Extreme analytics</span>
+          <span class="feature-desc">The school-wide version of our Analytics page: vocabulary growth, engagement, and quiz-score trends broken down by class and by student, not just in aggregate.</span>
+        </div>
+        <div class="feature">
+          <span class="mark">&#9642;</span>
+          <span class="feature-name">Reader rewards, included</span>
+          <span class="feature-desc">Points and the redeem shop ship with every plan at no extra cost.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="consumer-card">
+      <div class="consumer-card-top">
+        <div class="consumer-card-copy">
+          <div class="rewards-eyebrow">In production</div>
+          <h3>A Consumer App Is Coming</h3>
+          <p>Alongside the school license, we're building a standalone Panel Digest app for individual readers and parents outside a school subscription &mdash; landing on Google Play. Early screens below, same look as the site &mdash; nothing here is a real screenshot yet.</p>
+        </div>
+        <span class="play-badge">Google Play &middot; coming soon</span>
+      </div>
+
+      <div class="app-phones">
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="phone-bar"><span>Panel Digest<span class="dot">.</span></span></div>
+              <div class="phone-list">
+                <div class="phone-row"><span class="sw" style="background:var(--comic-orange)"></span><div class="ln"><span class="t1"></span><span class="t2"></span></div></div>
+                <div class="phone-row"><span class="sw" style="background:var(--comic-purple)"></span><div class="ln"><span class="t1"></span><span class="t2"></span></div></div>
+                <div class="phone-row"><span class="sw" style="background:var(--quiz-mint)"></span><div class="ln"><span class="t1"></span><span class="t2"></span></div></div>
+                <div class="phone-row"><span class="sw" style="background:var(--quiz-coral)"></span><div class="ln"><span class="t1"></span><span class="t2"></span></div></div>
+              </div>
+              <div class="phone-nav"><span class="active">Library</span><span>Rewards</span><span>Profile</span></div>
+            </div>
+          </div>
+          <div class="phone-caption">Library</div>
+        </div>
+
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="phone-bar"><span>Issue 01</span><span>&larr;</span></div>
+              <div class="phone-reader-panel">
+                <div class="phone-reader-caption">Panel 3 / 6</div>
+              </div>
+              <div class="phone-dots"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div>
+            </div>
+          </div>
+          <div class="phone-caption">Reader</div>
+        </div>
+
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="phone-bar"><span>Rewards</span></div>
+              <div class="phone-rewards">
+                <div class="pts">180</div>
+                <div class="pts-label">points &middot; Letterer</div>
+                <div class="bar"><i></i></div>
+                <div class="bar-label">120 to Inker</div>
+                <div class="redeem-row"><span>Back-issue unlock</span><span>40</span></div>
+                <div class="redeem-row"><span>Variant postcard</span><span>180</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-caption">Rewards</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <footer>
+    <span>Panel Digest &middot; palettes read by eye from each issue's own art.</span>
+    <span>Issue 01 sources: 1.png (explainer) &middot; 2.png (revision quiz)</span>
+  </footer>
+
+</div>
+
+<script>
+  function showView(name) {
+    ['catalog', 'analytics', 'pricing'].forEach(function (v) {
+      document.getElementById('view-' + v).hidden = v !== name;
+      document.getElementById('tab-' + v).setAttribute('aria-selected', String(v === name));
+    });
+  }
+
+  // Pixel rects (source image px) for each panel, measured against the black
+  // gutters/borders in 1.png and 2.png. Panels aren't a uniform grid, so each
+  // box is hand-measured rather than computed from a cols x rows formula.
+  var PANEL_DATA = {
+    '1.png': { w: 2000, h: 1600, panels: [
+      { x: 64, y: 41, w: 1266, h: 556 },
+      { x: 1356, y: 41, w: 580, h: 556 },
+      { x: 79, y: 632, w: 485, h: 457 },
+      { x: 606, y: 632, w: 1330, h: 457 },
+      { x: 64, y: 1112, w: 905, h: 447 },
+      { x: 1022, y: 1112, w: 914, h: 447 }
+    ] },
+    '2.png': { w: 2000, h: 1600, panels: [
+      { x: 152, y: 403, w: 702.5, h: 518 },
+      { x: 854.5, y: 403, w: 554.5, h: 518 },
+      { x: 1409, y: 403, w: 457, h: 518 },
+      { x: 152, y: 959, w: 525, h: 519 },
+      { x: 677, y: 959, w: 422, h: 519 },
+      { x: 1099, y: 959, w: 767, h: 519 }
+    ] }
+  };
+
+  function initPanelViewer(el) {
+    var src = el.getAttribute('data-image');
+    var data = PANEL_DATA[src];
+    if (!data) return;
+
+    var box = el.querySelector('.panel-viewer-box');
+    var caption = el.querySelector('.panel-viewer-caption');
+    var dotsWrap = el.querySelector('.panel-viewer-dots');
+    var idx = 0;
+
+    box.style.backgroundImage = 'url(' + src + ')';
+    data.panels.forEach(function () { dotsWrap.appendChild(document.createElement('span')); });
+    var dots = dotsWrap.querySelectorAll('span');
+
+    function render() {
+      var p = data.panels[idx];
+      var wPct = (p.w / data.w) * 100;
+      var hPct = (p.h / data.h) * 100;
+      var xPct = (p.x / data.w) * 100;
+      var yPct = (p.y / data.h) * 100;
+      box.style.backgroundSize = (100 / wPct * 100) + '% ' + (100 / hPct * 100) + '%';
+      box.style.backgroundPosition = (xPct / (100 - wPct) * 100) + '% ' + (yPct / (100 - hPct) * 100) + '%';
+      box.style.aspectRatio = p.w + ' / ' + p.h;
+      caption.textContent = 'Panel ' + (idx + 1) + ' / ' + data.panels.length;
+      dots.forEach(function (d, i) { d.classList.toggle('on', i === idx); });
+    }
+
+    function go(delta) {
+      idx = (idx + delta + data.panels.length) % data.panels.length;
+      render();
+    }
+
+    var startX = null;
+    box.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+    box.addEventListener('touchend', function (e) {
+      if (startX === null) return;
+      var dx = e.changedTouches[0].clientX - startX;
+      startX = null;
+      if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+    }, { passive: true });
+
+    render();
+  }
+
+  document.querySelectorAll('.panel-viewer').forEach(initPanelViewer);
+</script>
