@@ -76,6 +76,8 @@
 
   * { box-sizing: border-box; }
 
+  html { scroll-behavior: smooth; }
+
   body {
     background: var(--paper);
     color: var(--ink);
@@ -97,6 +99,15 @@
 
   .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
   a { color: var(--brand); }
+
+  mark {
+    background: var(--comic-yellow);
+    color: #171410;
+    padding: 0.02em 0.3em;
+    border-radius: 2px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
 
   /* ---------- company masthead ---------- */
 
@@ -185,11 +196,20 @@
 
   /* ---------- mission strip ---------- */
 
-  .mission {
-    padding-block: 26px;
+  .intro-row {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 40px;
+    padding-block: 26px 12px;
     border-bottom: 1px solid var(--rule);
+  }
+
+  @media (max-width: 780px) {
+    .intro-row { grid-template-columns: 1fr; }
+  }
+
+  .mission {
     color: var(--ink-soft);
-    max-width: 72ch;
   }
 
   .mission strong { color: var(--ink); }
@@ -304,7 +324,7 @@
   /* ---------- catalog ---------- */
 
   .catalog {
-    padding-block: 34px 12px;
+    padding-block: 0;
   }
 
   .catalog-head {
@@ -498,6 +518,10 @@
     background: none;
     border: none;
     padding: 0;
+  }
+
+  @media (min-width: 700px) {
+    .fullscreen-link { display: none; }
   }
 
   .comic-fullscreen {
@@ -982,10 +1006,12 @@
 
   <div id="view-catalog" role="tabpanel" aria-labelledby="tab-catalog">
 
+  <div class="intro-row">
+
   <section class="mission">
     <h2>Why We're Making This</h2>
     <p>Here's the problem: newspapers are built for adults who already know how to read them. Dense columns, no pictures, a wall of text per story. No wonder most students never get into the habit.</p>
-    <p>So we draw the story instead. One news event, six panels, done in whatever art style fits that story best. We're not trying to make current affairs &ldquo;easier.&rdquo; We're trying to make something a student actually wants to open.</p>
+    <p>So we draw the story instead. <mark>One news event, six panels</mark>, done in whatever art style fits that story best. We're not trying to make current affairs &ldquo;easier.&rdquo; We're trying to make something a student actually wants to open.</p>
     <p>And we don't reuse the same look for every issue. Each one gets its own art style, so flipping through the catalog feels like picking up a different comic each time, not filling in the same template with new headlines. Every issue also comes with a quiz, so reading the story is only half of it &mdash; you have to actually get it to move on.</p>
     <p>Every issue does two things: a six-panel explainer, and a quiz that checks if it stuck. Same story, told twice, in two different ways.</p>
   </section>
@@ -1023,6 +1049,8 @@
     </div>
   </section>
 
+  </div>
+
   <section class="issue-spread" id="issue-01">
     <div class="issue-spread-head">
       <span class="catalog-count mono">Issue 01 &middot; full spread</span>
@@ -1037,7 +1065,7 @@
         </div>
         <div class="exhibit-tag">The explainer</div>
       </div>
-      <p class="exhibit-caption">Bold, poster-flat blocks and hand-lettered marker text carry the explainer: how BRIC became BRICS, then BRICS+, and why New Delhi is hosting eleven leaders on September 12&ndash;13, 2026. A newspaper would spend eight hundred words on this. We do it in six panels.</p>
+      <p class="exhibit-caption">How BRIC became BRICS, then BRICS+, and why New Delhi is hosting eleven leaders on September 12&ndash;13, 2026. A newspaper would spend eight hundred words on this. We do it in six panels.</p>
       <div class="frame">
         <img src="1.png" alt="Comic strip explaining the history and 2026 New Delhi summit of the BRICS alliance, laid out across six panels.">
       </div>
